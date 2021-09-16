@@ -28,6 +28,7 @@ namespace Inventario01
             services.AddControllersWithViews();
             var connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<Inventario01Context>(option => option.UseSqlServer(connection));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
