@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Inventario01.Models;
+using Inventario01.Dto;
+using AutoMapper;
 
 namespace Inventario01.Controllers
 {
     public class MarcaController : Controller
     {
         private readonly Inventario01Context _context;
+        private readonly IMapper _mapper;
 
-        public MarcaController(Inventario01Context context)
+        public MarcaController(Inventario01Context context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: Marca
@@ -53,15 +57,16 @@ namespace Inventario01.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion")] Marca marca)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion")] MarcaDto marcaDto)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(marca);
+                var marca = _mapper.Map<Marca>(marcaDto);
+                _context.Marca.Add(marca);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(marca);
+            return View(marcaDto);
         }
 
         // GET: Marca/Edit/5
