@@ -25,7 +25,7 @@ namespace Inventario01.Controllers
         // GET: Marca
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Marca.ToListAsync());
+            return View(await _context.Marca.Select(x => _mapper.Map<MarcaDto>(x)).ToListAsync());
         }
 
         // GET: Marca/Details/5
@@ -37,13 +37,13 @@ namespace Inventario01.Controllers
             }
 
             var marca = await _context.Marca
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FindAsync(id);
             if (marca == null)
             {
                 return NotFound();
             }
 
-            return View(marca);
+            return View(_mapper.Map<MarcaDto>(marca));
         }
 
         // GET: Marca/Create
@@ -82,7 +82,7 @@ namespace Inventario01.Controllers
             {
                 return NotFound();
             }
-            return View(marca);
+            return View(_mapper.Map<MarcaDto>(marca));
         }
 
         // POST: Marca/Edit/5
@@ -90,9 +90,9 @@ namespace Inventario01.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion")] Marca marca)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion")] MarcaDto marcaDto)
         {
-            if (id != marca.Id)
+            if (id != marcaDto.Id)
             {
                 return NotFound();
             }
@@ -101,12 +101,13 @@ namespace Inventario01.Controllers
             {
                 try
                 {
-                    _context.Update(marca);
+                    var marca = _mapper.Map<Marca>(marcaDto);
+                    _context.Marca.Update(marca);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MarcaExists(marca.Id))
+                    if (!MarcaExists(marcaDto.Id))
                     {
                         return NotFound();
                     }
@@ -117,7 +118,7 @@ namespace Inventario01.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(marca);
+            return View(marcaDto);
         }
 
         // GET: Marca/Delete/5
@@ -129,13 +130,13 @@ namespace Inventario01.Controllers
             }
 
             var marca = await _context.Marca
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FindAsync(id);
             if (marca == null)
             {
                 return NotFound();
             }
 
-            return View(marca);
+            return View(_mapper.Map<MarcaDto>(marca));
         }
 
         // POST: Marca/Delete/5
