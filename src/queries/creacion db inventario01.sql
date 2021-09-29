@@ -1,0 +1,30 @@
+/* Base de datos Invetnario01 (Pruebas Varias) */
+CREATE DATABASE Inventario01;
+GO
+
+USE Inventario01;
+GO
+
+CREATE TABLE Marca(
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	Nombre VARCHAR(100) NOT NULL,
+	Descripcion VARCHAR(250) NOT NULL
+);
+
+CREATE TABLE Modelo(
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	Nombre VARCHAR(100) NOT NULL,
+	Descripcion VARCHAR(250) NOT NULL,
+	MarcaId INT NOT NULL
+
+	CONSTRAINT FK_Modelo_Marca FOREIGN KEY(MarcaId) REFERENCES Marca(Id)
+);
+
+CREATE TABLE Producto(
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	Nombre VARCHAR(100) NOT NULL,
+	Descripcion VARCHAR(250) NOT NULL,
+	ModeloId INT NOT NULL
+
+	CONSTRAINT FK_Producto_Modelo FOREIGN KEY(ModeloId) REFERENCES Modelo(Id)
+);
